@@ -7,1232 +7,823 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0f1c;
-            --bg-light: #111827;
-            --fg: #f1f5f9;
-            --muted: #64748b;
+            --bg: #09090b;
+            --surface: #18181b;
+            --surface-light: #27272a;
             --accent: #00d4aa;
             --accent-warm: #ff6b35;
-            --card: rgba(17, 24, 39, 0.8);
-            --border: rgba(100, 116, 139, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
         body {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg);
-            color: var(--fg);
+            color: var(--text-main);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Space Grotesk', sans-serif;
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+
+        /* --- PREMIUM BENTO GRID STYLES --- */
+        .bento-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(12, 1fr);
         }
 
-        /* Hero Background */
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background: 
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 212, 170, 0.15), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(255, 107, 53, 0.1), transparent),
-                linear-gradient(180deg, var(--bg) 0%, var(--bg-light) 100%);
-        }
-
-        /* Grid Pattern */
-        .grid-pattern {
-            position: absolute;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
-        }
-
-        /* Floating Particles */
-        .particles-container {
-            position: absolute;
-            inset: 0;
+        .bento-item {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bento-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bento-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%);
             pointer-events: none;
         }
 
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 50%;
-            opacity: 0;
-            animation: float-particle 8s infinite;
+        /* Specific Grid Items */
+        .span-4 { grid-column: span 4; }
+        .span-6 { grid-column: span 6; }
+        .span-8 { grid-column: span 8; }
+        .span-12 { grid-column: span 12; }
+
+        @media (max-width: 1024px) {
+            .span-4, .span-6, .span-8 { grid-column: span 6; }
+        }
+        @media (max-width: 768px) {
+            .span-4, .span-6, .span-8, .span-12 { grid-column: span 12; }
         }
 
-        @keyframes float-particle {
-            0%, 100% { opacity: 0; transform: translateY(100vh) scale(0); }
-            10% { opacity: 0.6; transform: translateY(90vh) scale(1); }
-            90% { opacity: 0.6; transform: translateY(10vh) scale(1); }
-            100% { opacity: 0; transform: translateY(0vh) scale(0); }
+        /* Brand Logo Card */
+        .brand-logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
         }
 
-        /* Code Snippet Floaters */
-        .code-floater {
-            position: absolute;
-            font-family: 'Space Grotesk', monospace;
-            font-size: 12px;
-            color: var(--accent);
-            opacity: 0.15;
-            white-space: nowrap;
-            animation: float-code 20s linear infinite;
-        }
-
-        @keyframes float-code {
-            0% { transform: translateX(-100%) translateY(0); }
-            100% { transform: translateX(100vw) translateY(-50px); }
-        }
-
-        /* Glowing Orbs */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            animation: orb-pulse 6s ease-in-out infinite;
-        }
-
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(0, 212, 170, 0.2);
-            top: -200px;
-            left: -100px;
-        }
-
-        .orb-2 {
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 107, 53, 0.15);
-            bottom: -150px;
-            right: -100px;
-            animation-delay: 3s;
-        }
-
-        @keyframes orb-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-        }
-
-        /* Badge Styles */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            background: rgba(0, 212, 170, 0.1);
-            border: 1px solid rgba(0, 212, 170, 0.3);
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--accent);
-        }
-
-        .badge-warm {
-            background: rgba(255, 107, 53, 0.1);
-            border-color: rgba(255, 107, 53, 0.3);
-            color: var(--accent-warm);
-        }
-
-        /* Price Tag */
-        .price-tag {
-            position: relative;
-            display: inline-flex;
+        /* Price Card Special Style */
+        .price-card {
+            background: linear-gradient(135deg, var(--accent) 0%, #00a88a 100%);
+            color: #003d33;
+            display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 20px 40px;
-            background: linear-gradient(135deg, var(--accent) 0%, #00a88a 100%);
+            text-align: center;
+        }
+        .price-card h2 { font-size: 7rem; line-height: 0.8; font-weight: 800; color: #002926; }
+        .price-card p { font-size: 1.5rem; font-weight: 600; opacity: 0.9; }
+
+        /* Tech Icon Box */
+        .tech-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
             border-radius: 16px;
-            box-shadow: 
-                0 20px 40px rgba(0, 212, 170, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transform: rotate(-3deg);
-            transition: transform 0.3s ease;
-        }
-
-        .price-tag:hover {
-            transform: rotate(0deg) scale(1.05);
-        }
-
-        .price-tag .currency { font-size: 18px; font-weight: 600; opacity: 0.9; }
-        .price-tag .amount { font-size: 56px; font-weight: 700; line-height: 1; font-family: 'Space Grotesk', sans-serif; }
-        .price-tag .label { font-size: 14px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
-
-        /* Cards */
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: rgba(0, 212, 170, 0.3);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Syllabus Accordion */
-        .syllabus-item {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 12px;
-            background: var(--card);
-            transition: all 0.3s ease;
-        }
-
-        .syllabus-item:hover { border-color: rgba(0, 212, 170, 0.3); }
-
-        .syllabus-header {
+            padding: 1rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px 24px;
-            cursor: pointer;
-            transition: background 0.3s ease;
+            gap: 1rem;
+            transition: 0.3s;
         }
-
-        .syllabus-header:hover { background: rgba(0, 212, 170, 0.05); }
-
-        .syllabus-header .icon {
-            width: 44px;
-            height: 44px;
+        .tech-box:hover { background: rgba(255,255,255,0.08); border-color: var(--accent); }
+        .tech-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 212, 170, 0.1);
-            border-radius: 10px;
-            margin-right: 16px;
-            flex-shrink: 0;
+            background: rgba(0,0,0,0.3);
+            font-size: 1.2rem;
         }
 
-        .syllabus-header .arrow {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .syllabus-item.active .arrow { transform: rotate(180deg); }
-
-        .syllabus-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-        }
-
-        .syllabus-item.active .syllabus-content { max-height: 2000px; }
-
-        .syllabus-inner {
-            padding: 0 24px 24px;
-            border-top: 1px solid var(--border);
-        }
-
-        .topic-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .topic-item:last-child { border-bottom: none; }
-
-        .topic-bullet {
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            margin-top: 8px;
-            flex-shrink: 0;
-        }
-
-        /* Schedule Cards */
-        .schedule-card {
-            position: relative;
-            padding: 24px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .schedule-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--accent);
-        }
-
-        .schedule-card:nth-child(2)::before { background: var(--accent-warm); }
-
-        .schedule-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Certificate Badges */
-        .cert-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 24px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .cert-badge:hover {
-            border-color: rgba(0, 212, 170, 0.3);
-            transform: scale(1.02);
-        }
-
-        .cert-icon {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--accent) 0%, #00a88a 100%);
-            border-radius: 10px;
-        }
-
-        /* CTA Button */
-        .cta-btn {
-            position: relative;
+        /* Buttons */
+        .cta-main {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 18px 40px;
-            background: linear-gradient(135deg, var(--accent) 0%, #00a88a 100%);
-            border: none;
-            border-radius: 12px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 16px 32px;
+            background: var(--text-main);
             color: var(--bg);
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 12px;
             text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
-
-        .cta-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.2) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .cta-main:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
         }
-
-        .cta-btn:hover::before { opacity: 1; }
-
-        .cta-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 212, 170, 0.4);
-        }
-
-        .cta-btn:active { transform: translateY(0); }
 
         /* Secondary Button */
         .btn-secondary {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            padding: 14px 28px;
+            padding: 16px 32px;
             background: transparent;
-            border: 2px solid var(--accent);
-            border-radius: 12px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 15px;
+            color: var(--text-main);
             font-weight: 600;
-            color: var(--accent);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            border-radius: 12px;
             text-decoration: none;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.2s;
         }
-
         .btn-secondary:hover {
-            background: rgba(0, 212, 170, 0.1);
-            transform: translateY(-2px);
-        }
-
-        /* Stats */
-        .stat-item { text-align: center; }
-
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 48px;
-            font-weight: 700;
+            background: rgba(255,255,255,0.05);
+            border-color: var(--accent);
             color: var(--accent);
-            line-height: 1;
         }
 
-        .stat-label { font-size: 14px; color: var(--muted); margin-top: 8px; }
-
-        /* Timeline */
-        .timeline-item {
-            position: relative;
-            padding-left: 40px;
-            padding-bottom: 32px;
+        /* Animated Background Elements */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 170, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            z-index: -1;
+            filter: blur(80px);
+        }
+        .bg-glow-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            z-index: -1;
+            filter: blur(80px);
         }
 
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 7px;
-            top: 24px;
-            bottom: 0;
-            width: 2px;
-            background: var(--border);
-        }
-
-        .timeline-item:last-child::before { display: none; }
-
-        .timeline-dot {
-            position: absolute;
-            left: 0;
-            top: 4px;
-            width: 16px;
-            height: 16px;
-            background: var(--accent);
-            border-radius: 50%;
-            border: 3px solid var(--bg);
-        }
-
-        /* Reveal Animation */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-        .reveal-delay-4 { transition-delay: 0.4s; }
-
-        /* Focus States */
-        *:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        /* Logo Specific Styles - UPDATED SIZES */
-        .logo-wrapper {
-            background: white;
-            padding: 20px 32px; /* Increased padding */
-            border-radius: 16px;
+        /* Badge */
+        .badge {
             display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        /* Section Styling */
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 3rem;
+        }
+        .section-title span { color: var(--accent); }
+
+        /* Syllabus Accordion Styles */
+        .accordion-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .accordion-item {
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .accordion-item:hover {
+            border-color: rgba(255,255,255,0.1);
+        }
+        .accordion-item.active {
+            border-color: var(--accent);
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            cursor: pointer;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            border: none;
+            color: var(--text-main);
+        }
+
+        .accordion-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
         
-        .logo-img {
-            height: 90px; /* Increased height from 50px to 90px */
-            width: auto;
-            display: block;
+        .accordion-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
         }
 
-        .logo-img-footer {
-            height: 40px;
-            width: auto;
+        .accordion-arrow {
+            transition: transform 0.3s ease;
+        }
+        .accordion-item.active .accordion-arrow {
+            transform: rotate(180deg);
         }
 
-        /* Reduced Motion */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        .accordion-content-inner {
+            padding: 0 24px 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .price-tag .amount { font-size: 40px; }
-            .stat-number { font-size: 36px; }
-            .logo-img { height: 60px; } /* Mobile size increased */
-            .logo-wrapper { padding: 12px 20px; }
+        .topic-block {
+            margin-top: 16px;
         }
+        .topic-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .topic-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .topic-list li {
+            position: relative;
+            margin-bottom: 4px;
+        }
+        .topic-list li::before {
+            content: '•';
+            position: absolute;
+            left: -15px;
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 4rem 0;
+            margin-top: 6rem;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div class="hero-bg"></div>
-        <div class="grid-pattern"></div>
-        <div class="particles-container" id="particles"></div>
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        
-        <!-- Code Floaters -->
-        <div class="code-floater" style="top: 20%; animation-delay: 0s;">&lt;div class="future"&gt;</div>
-        <div class="code-floater" style="top: 40%; animation-delay: 5s;">SELECT * FROM success;</div>
-        <div class="code-floater" style="top: 60%; animation-delay: 10s;">const skills = ['HTML', 'CSS', 'JS'];</div>
-        <div class="code-floater" style="top: 80%; animation-delay: 15s;">echo "Hello World";</div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
 
-        <div class="relative z-10 max-w-6xl mx-auto px-6 py-20 text-center">
-            
-            <!-- Logo Section -->
-            <div class="reveal mb-10">
-                <div class="logo-wrapper">
-                    <!-- Provided Logo URL -->
-                    <img src="https://z-cdn-media.chatglm.cn/files/fd410b27-9561-488d-9ef2-c8535971c969.png?auth_key=1872106887-09e738b90a324b4196f361a88b8a66cf-0-95355ce06a30ebd9343406187c22ce97" alt="XpertChamps Logo" class="logo-img">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-zinc-950/80 border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-white rounded-lg p-1.5">
+                    <img src="https://z-cdn-media.chatglm.cn/files/fd410b27-9561-488d-9ef2-c8535971c969.png?auth_key=1872106887-09e738b90a324b4196f361a88b8a66cf-0-95355ce06a30ebd9343406187c22ce97" alt="Logo" class="h-6 w-auto">
                 </div>
+                <span class="font-bold text-white text-sm hidden sm:block">Xpert Champ Pvt Ltd</span>
             </div>
-
-            <!-- Badge -->
-            <div class="reveal mb-6">
-                <span class="badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    Certified Workshop
-                </span>
-            </div>
-
-            <!-- Main Heading -->
-            <h1 class="reveal reveal-delay-1 text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-                <span class="block text-white">Web Development</span>
-                <span class="block" style="color: var(--accent);">Workshop</span>
-            </h1>
-
-            <!-- Schedule Info -->
-            <div class="reveal reveal-delay-2 flex flex-wrap justify-center gap-4 mb-10">
-                <div class="badge badge-warm">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                    2 Days Workshop
-                </div>
-                <div class="badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                    Sat & Sun | 2 Hours Daily
-                </div>
-            </div>
-
-            <!-- Price Tag -->
-            <div class="reveal reveal-delay-3 inline-block mb-10">
-                <div class="price-tag">
-                    <span class="currency">Just</span>
-                    <span class="amount">19</span>
-                    <span class="label">INR Only</span>
-                </div>
-            </div>
-
-            <!-- Slots Info -->
-            <div class="reveal mb-12">
-                <p class="text-lg text-gray-400">
-                    <span class="font-bold text-white">Only 100 Slots</span> Available - Register Now!
-                </p>
-            </div>
-
-            <!-- CTA Buttons -->
-            <div class="reveal flex flex-wrap justify-center gap-4">
-                <a href="#register" class="cta-btn">
-                    <span>Register Now</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                        <polyline points="12 5 19 12 12 19"/>
-                    </svg>
-                </a>
-                <a href="#syllabus" class="btn-secondary">
-                    <span>View Syllabus</span>
-                </a>
-            </div>
-
-            <!-- Certificates -->
-            <div class="reveal mt-16">
-                <p class="text-sm text-gray-500 mb-4">Verified Certificates From</p>
-                <div class="flex flex-wrap justify-center gap-6">
-                    <div class="cert-badge">
-                        <div class="cert-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                <polyline points="22 4 12 14.01 9 11.01"/>
-                            </svg>
-                        </div>
-                        <span class="font-semibold">AICTE</span>
-                    </div>
-                    <div class="cert-badge">
-                        <div class="cert-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                <polyline points="22 4 12 14.01 9 11.01"/>
-                            </svg>
-                        </div>
-                        <span class="font-semibold">ISO</span>
-                    </div>
-                    <div class="cert-badge">
-                        <div class="cert-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                <polyline points="22 4 12 14.01 9 11.01"/>
-                            </svg>
-                        </div>
-                        <span class="font-semibold">MSME</span>
-                    </div>
-                </div>
-            </div>
+            <a href="#register" class="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-200 transition-colors">
+                Register Now
+            </a>
         </div>
+    </nav>
 
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2">
-                <path d="M12 5v14M19 12l-7 7-7-7"/>
-            </svg>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="relative py-20 border-t border-b" style="border-color: var(--border); background: var(--bg-light);">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="stat-item reveal">
-                    <div class="stat-number" data-count="4">0</div>
-                    <div class="stat-label">Technologies</div>
-                </div>
-                <div class="stat-item reveal reveal-delay-1">
-                    <div class="stat-number" data-count="4">0</div>
-                    <div class="stat-label">Hours Training</div>
-                </div>
-                <div class="stat-item reveal reveal-delay-2">
-                    <div class="stat-number" data-count="100">0</div>
-                    <div class="stat-label">Limited Slots</div>
-                </div>
-                <div class="stat-item reveal reveal-delay-3">
-                    <div class="stat-number" data-count="1">0</div>
-                    <div class="stat-label">Live Project</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Schedule Section -->
-    <section class="py-24 relative">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="reveal text-4xl md:text-5xl font-bold mb-4">Workshop Schedule</h2>
-                <p class="reveal reveal-delay-1 text-gray-400 text-lg">Mark your calendar for these sessions</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Day 1 -->
-                <div class="schedule-card reveal">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg" style="background: rgba(0, 212, 170, 0.2); color: var(--accent);">01</div>
-                        <div>
-                            <h3 class="text-xl font-bold">Saturday 28-02-2026</h3>
-                            <p style="color: var(--accent);">Day 1</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                            <span>7:00 PM - 9:00 PM</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                            </svg>
-                            <span>HTML + CSS Fundamentals</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 2 -->
-                <div class="schedule-card reveal reveal-delay-1">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg" style="background: rgba(255, 107, 53, 0.2); color: var(--accent-warm);">02</div>
-                        <div>
-                            <h3 class="text-xl font-bold">Sunday 01-03-2026</h3>
-                            <p style="color: var(--accent-warm);">Day 2</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-warm)" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                            <span>10:00 AM - 12:00 PM</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-warm)" stroke-width="2">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                            </svg>
-                            <span>SQL + PHP + Live Project</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Syllabus Section -->
-    <section id="syllabus" class="py-24 relative" style="background: var(--bg-light);">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="reveal text-4xl md:text-5xl font-bold mb-4">Complete Syllabus</h2>
-                <p class="reveal reveal-delay-1 text-gray-400 text-lg">Everything you'll learn in this workshop</p>
-            </div>
-
-            <!-- HTML Syllabus -->
-            <div class="syllabus-item reveal active" data-syllabus="html">
-                <div class="syllabus-header" onclick="toggleSyllabus(this)">
-                    <div class="flex items-center">
-                        <div class="icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
-                                <polyline points="16 18 22 12 16 6"/>
-                                <polyline points="8 6 2 12 8 18"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold">HTML - Web Structure</h3>
-                            <p class="text-sm text-gray-400">2 Days Workshop Syllabus</p>
-                        </div>
-                    </div>
-                    <div class="arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="syllabus-content">
-                    <div class="syllabus-inner">
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Introduction to Web Development</strong>
-                                <p class="text-sm text-gray-400 mt-1">What is Web Development, Frontend vs Backend, How websites work</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Introduction to HTML</strong>
-                                <p class="text-sm text-gray-400 mt-1">What is HTML, Structure of a webpage, Basic HTML page structure</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Basic Tags</strong>
-                                <p class="text-sm text-gray-400 mt-1">Headings (h1-h6), Paragraph, Line break, Horizontal line</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Formatting Tags</strong>
-                                <p class="text-sm text-gray-400 mt-1">Bold, Italic, Underline, Lists (ordered & unordered)</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Links & Images</strong>
-                                <p class="text-sm text-gray-400 mt-1">Anchor tag, Image tag, Attributes (href, src, alt)</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Forms Basics</strong>
-                                <p class="text-sm text-gray-400 mt-1">Input types, Label, Button, Simple registration form structure</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Mini Task</strong>
-                                <p class="text-sm text-gray-400 mt-1">Create a simple webpage with Heading, Paragraph, Image, Link</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CSS Syllabus -->
-            <div class="syllabus-item reveal reveal-delay-1" data-syllabus="css">
-                <div class="syllabus-header" onclick="toggleSyllabus(this)">
-                    <div class="flex items-center">
-                        <div class="icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-                                <line x1="9" y1="9" x2="9.01" y2="9"/>
-                                <line x1="15" y1="9" x2="15.01" y2="9"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold">CSS - Styling & Design</h3>
-                            <p class="text-sm text-gray-400">1 Hour Workshop Syllabus</p>
-                        </div>
-                    </div>
-                    <div class="arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="syllabus-content">
-                    <div class="syllabus-inner">
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Introduction to CSS</strong>
-                                <p class="text-sm text-gray-400 mt-1">What is CSS, Types of CSS (Inline, Internal, External)</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Selectors & Colors</strong>
-                                <p class="text-sm text-gray-400 mt-1">ID selector, Text color, Background color</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Fonts & Text Styling</strong>
-                                <p class="text-sm text-gray-400 mt-1">font-size, font-family, text-align, text-decoration</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Box Model</strong>
-                                <p class="text-sm text-gray-400 mt-1">margin, padding, border</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Mini Task</strong>
-                                <p class="text-sm text-gray-400 mt-1">Style the HTML page with colors, fonts, spacing, center content</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SQL Syllabus -->
-            <div class="syllabus-item reveal reveal-delay-2" data-syllabus="sql">
-                <div class="syllabus-header" onclick="toggleSyllabus(this)">
-                    <div class="flex items-center">
-                        <div class="icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
-                                <ellipse cx="12" cy="5" rx="9" ry="3"/>
-                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold">SQL - Database Management</h3>
-                            <p class="text-sm text-gray-400">1 Hour Workshop Syllabus</p>
-                        </div>
-                    </div>
-                    <div class="arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="syllabus-content">
-                    <div class="syllabus-inner">
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Introduction to Database</strong>
-                                <p class="text-sm text-gray-400 mt-1">What is Database, RDBMS, Real-time examples (College, Banking, E-commerce)</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Introduction to SQL</strong>
-                                <p class="text-sm text-gray-400 mt-1">What is SQL, Types of SQL Commands (DDL, DML, DQL)</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Creating Database & Table</strong>
-                                <p class="text-sm text-gray-400 mt-1">CREATE DATABASE, CREATE TABLE, Data Types, PRIMARY KEY, AUTO_INCREMENT</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>CRUD Operations</strong>
-                                <p class="text-sm text-gray-400 mt-1">INSERT, SELECT, UPDATE, DELETE, WHERE condition</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Mini Task</strong>
-                                <p class="text-sm text-gray-400 mt-1">Create table, Insert records, Display records with condition</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PHP Syllabus -->
-            <div class="syllabus-item reveal reveal-delay-3" data-syllabus="php">
-                <div class="syllabus-header" onclick="toggleSyllabus(this)">
-                    <div class="flex items-center">
-                        <div class="icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                                <line x1="8" y1="21" x2="16" y2="21"/>
-                                <line x1="12" y1="17" x2="12" y2="21"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold">PHP - Server-Side Scripting</h3>
-                            <p class="text-sm text-gray-400">1 Hour Workshop Syllabus</p>
-                        </div>
-                    </div>
-                    <div class="arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="syllabus-content">
-                    <div class="syllabus-inner">
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Introduction to PHP</strong>
-                                <p class="text-sm text-gray-400 mt-1">Server-Side Scripting, PHP vs HTML, How PHP Works</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>PHP Basics</strong>
-                                <p class="text-sm text-gray-400 mt-1">PHP Syntax, Variables, Data Types, echo/print, Comments</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>Conditional Statements</strong>
-                                <p class="text-sm text-gray-400 mt-1">if, else, else if, Comparison operators</p>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="topic-bullet"></div>
-                            <div>
-                                <strong>PHP + MySQL Connection</strong>
-                                <p class="text-sm text-gray-400 mt-1">mysqli_connect(), Insert form data into database, View database</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final Project Section -->
-    <section class="py-24 relative overflow-hidden">
-        <div class="absolute inset-0">
-            <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.1), transparent 70%);"></div>
-        </div>
-        <div class="max-w-6xl mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <span class="reveal badge badge-warm mb-6">Live Project</span>
-                    <h2 class="reveal reveal-delay-1 text-4xl md:text-5xl font-bold mb-6">
-                        Build a Complete <span style="color: var(--accent);">Login System</span>
-                    </h2>
-                    <p class="reveal reveal-delay-2 text-gray-400 text-lg mb-8">
-                        Apply everything you learn in a real-world project. You'll build a complete authentication system with email functionality.
+    <!-- HERO SECTION -->
+    <main class="pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="bento-grid">
+                
+                <!-- Main Title -->
+                <div class="bento-item span-8 md:row-span-2 flex flex-col justify-center">
+                    <span class="badge">AICTE & ISO Certified</span>
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+                        Web Development <br>
+                        <span style="color: var(--accent)">Workshop</span>
+                    </h1>
+                    <p class="text-lg text-gray-400 max-w-lg mb-8">
+                        A 2-day intensive journey from zero to building a complete Login System with HTML, CSS, SQL, and PHP. Live, hands-on, and project-based.
                     </p>
+                    
+                    <!-- Buttons Group -->
+                    <div class="flex flex-wrap gap-4 mb-8">
+                        <a href="#register" class="cta-main">
+                            Register Now
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                        <a href="#syllabus" class="btn-secondary">
+                            <span>View Syllabus</span>
+                        </a>
+                    </div>
 
-                    <div class="space-y-4">
-                        <div class="timeline-item reveal reveal-delay-3">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold mb-1">User Registration</h4>
-                            <p class="text-gray-400 text-sm">Create beautiful registration forms with validation</p>
+                    <!-- Tech Stack -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-auto">
+                        <div class="tech-box">
+                            <div class="tech-icon text-orange-500">H</div>
+                            <span class="text-sm font-medium">HTML</span>
                         </div>
-                        <div class="timeline-item reveal reveal-delay-4">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold mb-1">Secure Login System</h4>
-                            <p class="text-gray-400 text-sm">Implement authentication with PHP sessions</p>
+                        <div class="tech-box">
+                            <div class="tech-icon text-blue-400">C</div>
+                            <span class="text-sm font-medium">CSS</span>
                         </div>
-                        <div class="timeline-item reveal">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold mb-1">Email via SMTP</h4>
-                            <p class="text-gray-400 text-sm">Send welcome emails and password reset links</p>
+                        <div class="tech-box">
+                            <div class="tech-icon text-sky-400">S</div>
+                            <span class="text-sm font-medium">SQL</span>
+                        </div>
+                        <div class="tech-box">
+                            <div class="tech-icon text-indigo-400">P</div>
+                            <span class="text-sm font-medium">PHP</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Logo Display -->
-                <div class="reveal flex justify-center items-center">
-                    <div class="card p-12 flex flex-col items-center justify-center text-center">
-                        <!-- Large Logo Display -->
-                        <div class="bg-white rounded-2xl p-6 mb-6 inline-block shadow-lg">
-                             <img src="https://z-cdn-media.chatglm.cn/files/fd410b27-9561-488d-9ef2-c8535971c969.png?auth_key=1872106887-09e738b90a324b4196f361a88b8a66cf-0-95355ce06a30ebd9343406187c22ce97" alt="XpertChamps Logo" class="h-20 w-auto">
+                <!-- Price -->
+                <div class="bento-item span-4 price-card">
+                    <p class="text-lg opacity-80">Special Offer</p>
+                    <h2>19<span class="text-4xl align-top">₹</span></h2>
+                    <p class="font-semibold mt-2">INR Only</p>
+                </div>
+
+                <!-- Company -->
+                <div class="bento-item span-4 flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-zinc-800 to-zinc-900">
+                    <img src="https://z-cdn-media.chatglm.cn/files/fd410b27-9561-488d-9ef2-c8535971c969.png?auth_key=1872106887-09e738b90a324b4196f361a88b8a66cf-0-95355ce06a30ebd9343406187c22ce97" alt="XpertChamps" class="brand-logo mb-4">
+                    <h3 class="text-xl font-bold">Xpert Champ</h3>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Pvt Ltd</p>
+                    <div class="flex items-center gap-2 mt-4 text-green-400 text-sm">
+                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        Verified Organizer
+                    </div>
+                </div>
+
+                <!-- Schedule -->
+                <div class="bento-item span-6 flex flex-col md:flex-row gap-6">
+                    <div class="flex-1">
+                        <span class="text-xs text-gray-500 uppercase tracking-widest">Day 1</span>
+                        <h3 class="text-2xl font-bold mt-2">Saturday</h3>
+                        <p class="text-gray-400 text-sm mb-2">28-02-2026 | 7:00 PM - 9:00 PM</p>
+                        <div class="inline-block px-3 py-1 bg-white/5 rounded-full text-xs text-teal-400 font-medium">HTML + CSS</div>
+                    </div>
+                    <div class="hidden md:block w-px bg-white/10"></div>
+                    <div class="flex-1">
+                        <span class="text-xs text-gray-500 uppercase tracking-widest">Day 2</span>
+                        <h3 class="text-2xl font-bold mt-2">Sunday</h3>
+                        <p class="text-gray-400 text-sm mb-2">01-03-2026 | 10:00 AM - 12:00 PM</p>
+                        <div class="inline-block px-3 py-1 bg-white/5 rounded-full text-xs text-orange-400 font-medium">SQL + PHP + Project</div>
+                    </div>
+                </div>
+
+                <!-- Slots -->
+                <div class="bento-item span-6 flex items-center justify-between bg-gradient-to-r from-zinc-900 to-zinc-800">
+                    <div>
+                        <h3 class="text-2xl font-bold">Limited Slots</h3>
+                        <p class="text-gray-400">Only 100 students will be selected.</p>
+                    </div>
+                    <div class="w-16 h-16 border-2 border-dashed border-white/20 rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">100</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- DETAILED SYLLABUS SECTION -->
+    <section id="syllabus" class="py-20 px-6 relative">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="section-title">Complete <span>Syllabus</span></h2>
+            <p class="section-subtitle">Click on each technology below to view the detailed curriculum.</p>
+            
+            <div class="accordion-container">
+
+                <!-- HTML Accordion -->
+                <div class="accordion-item active">
+                    <button class="accordion-header">
+                        <div class="header-left">
+                            <div class="accordion-icon-box bg-orange-500/20 text-orange-400">H</div>
+                            <div>
+                                <h3 class="text-lg font-bold">HTML – 2 Days Workshop Syllabus</h3>
+                                <p class="text-sm text-gray-500">Web Structure Fundamentals</p>
+                            </div>
                         </div>
-                        
-                        <h3 class="text-2xl font-bold mb-2" style="font-family: 'Space Grotesk', sans-serif;">XpertChamps</h3>
-                        
-                        <div class="w-16 h-1 rounded mb-6" style="background: var(--accent);"></div>
-                        
-                        <p class="text-gray-300 text-sm max-w-xs">
-                            Your trusted partner in skill development and technology training.
-                        </p>
-                        
-                        <div class="mt-6 flex gap-4">
-                            <span class="badge text-xs">AICTE</span>
-                            <span class="badge text-xs">ISO</span>
-                            <span class="badge text-xs">MSME</span>
+                        <svg class="accordion-arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content" style="max-height: 2000px;">
+                        <div class="accordion-content-inner">
+                            
+                            <div class="topic-block">
+                                <div class="topic-title">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    Introduction to Web Development
+                                </div>
+                                <ul class="topic-list">
+                                    <li>What is Web Development?</li>
+                                    <li>Frontend vs Backend</li>
+                                    <li>How websites work (Browser – Server – Database)</li>
+                                    <li>Objective: Students learn how to create the structure of a webpage.</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">1. Introduction to HTML (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>What is HTML?</li>
+                                    <li>Structure of a webpage</li>
+                                    <li>Basic HTML page structure</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">2. Basic Tags (15 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Headings (h1–h6)</li>
+                                    <li>Paragraph, Line break, Horizontal line</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">3. Formatting Tags (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Bold, Italic, Underline</li>
+                                    <li>Lists (ordered & unordered)</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">4. Links & Images (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Anchor tag & Image tag</li>
+                                    <li>Attributes (href, src, alt)</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">5. Forms Basics (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Input types, Label, Button</li>
+                                    <li>Simple registration form structure</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">6. Mini Task (5 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Create a simple webpage with Heading, Paragraph, Image, Link.</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSS Accordion -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <div class="header-left">
+                            <div class="accordion-icon-box bg-blue-500/20 text-blue-400">C</div>
+                            <div>
+                                <h3 class="text-lg font-bold">CSS – 1 Hour Workshop Syllabus</h3>
+                                <p class="text-sm text-gray-500">Styling & Design</p>
+                            </div>
+                        </div>
+                        <svg class="accordion-arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            
+                            <div class="topic-block">
+                                <div class="topic-title">1. Introduction to CSS (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>What is CSS?</li>
+                                    <li>Types of CSS: Inline, Internal, External</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">2. Selectors & Colors (15 mins)</div>
+                                <ul class="topic-list">
+                                    <li>ID selector</li>
+                                    <li>Text color & Background color</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">3. Fonts & Text Styling (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>font-size, font-family</li>
+                                    <li>text-align, text-decoration</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">4. Box Model (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Margin, Padding, Border</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">5. Mini Task (5 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Style the HTML page: Add colors, fonts, spacing, center content.</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SQL Accordion -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <div class="header-left">
+                            <div class="accordion-icon-box bg-sky-500/20 text-sky-400">S</div>
+                            <div>
+                                <h3 class="text-lg font-bold">SQL – 1 Hour Workshop Syllabus</h3>
+                                <p class="text-sm text-gray-500">Database Management</p>
+                            </div>
+                        </div>
+                        <svg class="accordion-arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            
+                            <div class="topic-block">
+                                <div class="topic-title">1. Introduction to Database (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>What is Database? What is RDBMS?</li>
+                                    <li>Real-time examples (College, Banking, E-commerce)</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">2. Introduction to SQL (5 mins)</div>
+                                <ul class="topic-list">
+                                    <li>What is SQL?</li>
+                                    <li>Types of SQL Commands (DDL, DML, DQL – overview only)</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">3. Creating Database & Table (15 mins – Live Demo)</div>
+                                <ul class="topic-list">
+                                    <li>CREATE DATABASE, CREATE TABLE</li>
+                                    <li>Data Types (INT, VARCHAR), PRIMARY KEY, AUTO_INCREMENT</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">4. CRUD Operations (20 mins – Practice)</div>
+                                <ul class="topic-list">
+                                    <li>INSERT, SELECT, UPDATE, DELETE</li>
+                                    <li>WHERE condition</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">5. Mini Task (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>Create a simple table, Insert 2–3 records, Display records with condition.</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PHP Accordion -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <div class="header-left">
+                            <div class="accordion-icon-box bg-indigo-500/20 text-indigo-400">P</div>
+                            <div>
+                                <h3 class="text-lg font-bold">PHP – 1 Hour Workshop Syllabus</h3>
+                                <p class="text-sm text-gray-500">Server-Side Scripting</p>
+                            </div>
+                        </div>
+                        <svg class="accordion-arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            
+                            <div class="topic-block">
+                                <div class="topic-title">1. Introduction to PHP (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>What is Server-Side Scripting?</li>
+                                    <li>PHP vs HTML, How PHP Works</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">2. PHP Basics (15 mins)</div>
+                                <ul class="topic-list">
+                                    <li>PHP Syntax, Variables, Data Types</li>
+                                    <li>echo / print, Comments</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">3. Conditional Statements (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>if, else, else if</li>
+                                    <li>Comparison operators & programs</li>
+                                </ul>
+                            </div>
+
+                            <div class="topic-block">
+                                <div class="topic-title">4. PHP + MySQL Connection (10 mins)</div>
+                                <ul class="topic-list">
+                                    <li>mysqli_connect()</li>
+                                    <li>Insert form data into database and view database</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Project & Certification Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto bento-grid">
+            
+            <div class="bento-item span-6 md:flex md:items-center">
+                <div class="w-full">
+                    <h2 class="text-3xl font-bold mb-4">Verified Certification</h2>
+                    <p class="text-gray-400 mb-6">
+                        Receive an industry-recognized certificate upon completion. Verified by AICTE, ISO, and MSME standards to boost your resume.
+                    </p>
+                    <div class="flex gap-4">
+                        <div class="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                            <span class="text-xs font-bold text-teal-400">AICTE</span>
+                        </div>
+                        <div class="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                            <span class="text-xs font-bold text-teal-400">ISO</span>
+                        </div>
+                        <div class="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                            <span class="text-xs font-bold text-teal-400">MSME</span>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="bento-item span-6 bg-gradient-to-br from-teal-900/20 to-zinc-900">
+                <span class="badge bg-teal-500/20 text-teal-300">Hands-on Project</span>
+                <h3 class="text-2xl font-bold mt-2">Build a Login System</h3>
+                <p class="text-gray-400 mt-2">
+                    Create a secure user authentication system with registration, login, and email verification features.
+                </p>
+                <div class="flex gap-2 mt-4">
+                    <span class="px-2 py-1 bg-black/20 rounded text-xs">Registration</span>
+                    <span class="px-2 py-1 bg-black/20 rounded text-xs">Sessions</span>
+                    <span class="px-2 py-1 bg-black/20 rounded text-xs">SMTP Email</span>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <!-- Registration Section -->
-    <section id="register" class="py-24 relative" style="background: var(--bg-light);">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="card p-8 md:p-12 text-center">
-                <h2 class="reveal text-4xl md:text-5xl font-bold mb-4">Ready to Start Learning?</h2>
-                <p class="reveal reveal-delay-1 text-gray-400 text-lg mb-8">
-                    Join 100 students in this intensive 2-day workshop and kickstart your web development journey.
-                </p>
-
-                <div class="reveal reveal-delay-2 flex flex-wrap justify-center gap-6 mb-10">
-                    <div class="text-center">
-                        <div class="text-3xl font-bold" style="color: var(--accent);">19</div>
-                        <div class="text-sm text-gray-400">INR Only</div>
+    <section id="register" class="py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Ready to Join?</h2>
+            <p class="text-gray-400 text-lg mb-10">Secure your spot now for just ₹19. Limited seats available.</p>
+            
+            <div class="bg-zinc-900 rounded-3xl p-8 md:p-12 border border-white/5 shadow-2xl">
+                <div class="grid md:grid-cols-3 gap-6 mb-10 text-left">
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <div class="text-xs text-gray-500 uppercase">Investment</div>
+                        <div class="text-2xl font-bold text-white mt-1">₹19 Only</div>
                     </div>
-                    <div class="w-px bg-gray-700"></div>
-                    <div class="text-center">
-                        <div class="text-3xl font-bold" style="color: var(--accent);">4</div>
-                        <div class="text-sm text-gray-400">Hours Training</div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <div class="text-xs text-gray-500 uppercase">Duration</div>
+                        <div class="text-2xl font-bold text-white mt-1">2 Days, 4 Hours</div>
                     </div>
-                    <div class="w-px bg-gray-700"></div>
-                    <div class="text-center">
-                        <div class="text-3xl font-bold" style="color: var(--accent);">100</div>
-                        <div class="text-sm text-gray-400">Limited Slots</div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <div class="text-xs text-gray-500 uppercase">Certificate</div>
+                        <div class="text-2xl font-bold text-white mt-1">Verified</div>
                     </div>
                 </div>
 
-                <div class="reveal reveal-delay-3">
-                    <a href="https://forms.gle/9cPRnLAb26Tvu59p6" class="cta-btn">
-                        <span>Register for 19 INR</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                            <polyline points="12 5 19 12 12 19"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <p class="reveal reveal-delay-4 text-sm text-gray-500 mt-6">
-                    Certificates from AICTE, ISO, and MSME will be provided upon completion
-                </p>
+                <a href="https://forms.gle/9cPRnLAb26Tvu59p6" class="cta-main w-full md:w-auto">
+                    Register Now for ₹19
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-12 border-t" style="border-color: var(--border);">
-        <div class="max-w-6xl mx-auto px-6 text-center">
-            <div class="flex items-center justify-center mb-4">
-                <!-- Footer Logo -->
-                 <div class="bg-white rounded-lg p-2 inline-block">
-                    <img src="https://z-cdn-media.chatglm.cn/files/fd410b27-9561-488d-9ef2-c8535971c969.png?auth_key=1872106887-09e738b90a324b4196f361a88b8a66cf-0-95355ce06a30ebd9343406187c22ce97" alt="XpertChamps Logo" class="logo-img-footer">
-                 </div>
-            </div>
-            <p class="text-gray-500 text-sm mt-4">
-                Empowering students with practical skills since 2020
-            </p>
-            <div class="flex justify-center gap-6 mt-6">
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a>
-            </div>
-            <p class="text-gray-600 text-xs mt-8">
+    <footer>
+        <div class="max-w-7xl mx-auto px-6">
+            <img src="https://z-cdn-media.chatglm.cn/files/fd410b27-9561-488d-9ef2-c8535971c969.png?auth_key=1872106887-09e738b90a324b4196f361a88b8a66cf-0-95355ce06a30ebd9343406187c22ce97" alt="Logo" class="h-12 w-auto mx-auto mb-4 opacity-60">
+            <p class="text-gray-600 text-sm">
                 © 2025 Xpert Champ Pvt Ltd. All rights reserved.
             </p>
         </div>
     </footer>
 
     <script>
-        // Initialize particles
-        function initParticles() {
-            const container = document.getElementById('particles');
-            if (!container) return;
-            const particleCount = 30;
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 8 + 's';
-                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+        // Accordion Script
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordionItem = button.parentElement;
+                const isActive = accordionItem.classList.contains('active');
                 
-                const colors = ['var(--accent)', 'var(--accent-warm)', '#ffffff'];
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.width = (2 + Math.random() * 4) + 'px';
-                particle.style.height = particle.style.width;
-                
-                container.appendChild(particle);
-            }
-        }
-
-        // Syllabus accordion toggle
-        function toggleSyllabus(header) {
-            const item = header.parentElement;
-            const wasActive = item.classList.contains('active');
-            
-            document.querySelectorAll('.syllabus-item').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            if (!wasActive) {
-                item.classList.add('active');
-            }
-        }
-
-        // Scroll reveal animation
-        function initScrollReveal() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+                // Close all items
+                document.querySelectorAll('.accordion-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.querySelector('.accordion-content').style.maxHeight = null;
                 });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
 
-            document.querySelectorAll('.reveal').forEach(el => {
-                observer.observe(el);
-            });
-        }
-
-        // Counter animation
-        function animateCounters() {
-            const counters = document.querySelectorAll('.stat-number[data-count]');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const target = parseInt(entry.target.dataset.count);
-                        let current = 0;
-                        const increment = target / 30;
-                        const duration = 1500;
-                        const stepTime = duration / 30;
-                        
-                        const timer = setInterval(() => {
-                            current += increment;
-                            if (current >= target) {
-                                entry.target.textContent = target;
-                                clearInterval(timer);
-                            } else {
-                                entry.target.textContent = Math.floor(current);
-                            }
-                        }, stepTime);
-                        
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            counters.forEach(counter => observer.observe(counter));
-        }
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    accordionItem.classList.add('active');
+                    const content = accordionItem.querySelector('.accordion-content');
+                    content.style.maxHeight = content.scrollHeight + "px";
                 }
             });
         });
 
-        // Mouse parallax
-        document.addEventListener('mousemove', (e) => {
-            const orbs = document.querySelectorAll('.orb');
-            const x = (e.clientX / window.innerWidth - 0.5) * 20;
-            const y = (e.clientY / window.innerHeight - 0.5) * 20;
-            
-            orbs.forEach((orb, i) => {
-                const factor = i === 0 ? 1 : -1;
-                orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
-        });
+        }, { threshold: 0.1 });
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            initParticles();
-            initScrollReveal();
-            animateCounters();
+        document.querySelectorAll('.bento-item, .accordion-item, section > div').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
         });
-
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            document.querySelectorAll('.particle, .code-floater, .orb').forEach(el => {
-                el.style.animation = 'none';
-            });
+        
+        // Initialize first accordion item to be open on load
+        const firstItem = document.querySelector('.accordion-item.active');
+        if(firstItem) {
+            const content = firstItem.querySelector('.accordion-content');
+            content.style.maxHeight = content.scrollHeight + "px";
         }
     </script>
 </body>
